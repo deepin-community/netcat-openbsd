@@ -8,7 +8,7 @@ Subject: New flag '-C' to translate terminal line feeds to CRLF
  2 files changed, 47 insertions(+), 34 deletions(-)
 
 diff --git a/nc.1 b/nc.1
-index 9efa500..062859f 100644
+index 44be0d9..a45e184 100644
 --- a/nc.1
 +++ b/nc.1
 @@ -33,7 +33,7 @@
@@ -36,13 +36,13 @@ index 9efa500..062859f 100644
  of requests required by the server.
  As another example, an email may be submitted to an SMTP server using:
  .Bd -literal -offset indent
--$ nc localhost 25 \*(Lt\*(Lt EOF
-+$ nc [\-C] localhost 25 \*(Lt\*(Lt EOF
+-$ nc localhost 25 << EOF
++$ nc [\-C] localhost 25 << EOF
  HELO host.example.com
- MAIL FROM:\*(Ltuser@host.example.com\*(Gt
- RCPT TO:\*(Ltuser2@host.example.com\*(Gt
+ MAIL FROM:<user@host.example.com>
+ RCPT TO:<user2@host.example.com>
 diff --git a/netcat.c b/netcat.c
-index 9ca84bd..0a5ba0a 100644
+index 297ced3..1162425 100644
 --- a/netcat.c
 +++ b/netcat.c
 @@ -166,6 +166,8 @@ char	*tls_expecthash;			/* required hash of peer cert */
@@ -54,7 +54,7 @@ index 9ca84bd..0a5ba0a 100644
  #endif
  
  int recvcount, recvlimit;
-@@ -215,7 +217,7 @@ ssize_t fillbuf(int, unsigned char *, size_t *, struct tls *);
+@@ -216,7 +218,7 @@ ssize_t fillbuf(int, unsigned char *, size_t *, struct tls *);
  void	tls_setup_client(struct tls *, int, char *);
  struct tls *tls_setup_server(struct tls *, int, char *);
  #else
@@ -63,7 +63,7 @@ index 9ca84bd..0a5ba0a 100644
  ssize_t fillbuf(int, unsigned char *, size_t *);
  #endif
  
-@@ -256,7 +258,7 @@ main(int argc, char *argv[])
+@@ -255,7 +257,7 @@ main(int argc, char *argv[])
  #ifdef HAVE_TLS
  	    "46C:cDde:FH:hI:i:K:klM:m:NnO:o:P:p:R:rSs:T:tUuV:vW:w:X:x:Z:z"))
  #else
@@ -72,7 +72,7 @@ index 9ca84bd..0a5ba0a 100644
  #endif
  	    != -1) {
  		switch (ch) {
-@@ -286,6 +288,10 @@ main(int argc, char *argv[])
+@@ -285,6 +287,10 @@ main(int argc, char *argv[])
  		case 'c':
  			usetls = 1;
  			break;
@@ -83,7 +83,7 @@ index 9ca84bd..0a5ba0a 100644
  #endif
  		case 'd':
  			dflag = 1;
-@@ -1363,12 +1369,6 @@ readwrite(int net_fd)
+@@ -1343,12 +1349,6 @@ readwrite(int net_fd)
  		    stdinbufpos == 0 && netinbufpos == 0)
  			return;
  
@@ -96,7 +96,7 @@ index 9ca84bd..0a5ba0a 100644
  		/* poll */
  		num_fds = poll(pfd, 4, timeout);
  
-@@ -1448,7 +1448,7 @@ readwrite(int net_fd)
+@@ -1428,7 +1428,7 @@ readwrite(int net_fd)
  				pfd[POLL_NETOUT].events = POLLOUT;
  			else
  #else
@@ -105,7 +105,7 @@ index 9ca84bd..0a5ba0a 100644
  #endif
  			if (ret == -1)
  				pfd[POLL_NETOUT].fd = -1;
-@@ -1507,7 +1507,7 @@ readwrite(int net_fd)
+@@ -1487,7 +1487,7 @@ readwrite(int net_fd)
  				pfd[POLL_STDOUT].events = POLLOUT;
  			else
  #else
@@ -114,7 +114,7 @@ index 9ca84bd..0a5ba0a 100644
  #endif
  			if (ret == -1)
  				pfd[POLL_STDOUT].fd = -1;
-@@ -1533,33 +1533,40 @@ readwrite(int net_fd)
+@@ -1513,36 +1513,43 @@ readwrite(int net_fd)
  }
  
  ssize_t
@@ -129,6 +129,9 @@ index 9ca84bd..0a5ba0a 100644
 +	ssize_t n, r;
  	ssize_t adjust;
 +	unsigned char *lf = NULL;
+ 
+ 	if (fd == -1)
+ 		return -1;
  
 -#ifdef HAVE_TLS
 -	if (tls) {
@@ -176,7 +179,7 @@ index 9ca84bd..0a5ba0a 100644
  	/* adjust buffer */
  	adjust = *bufpos - n;
  	if (adjust > 0)
-@@ -2072,6 +2079,7 @@ help(void)
+@@ -2087,6 +2094,7 @@ help(void)
  	fprintf(stderr, "\tCommand Summary:\n\
  	\t-4		Use IPv4\n\
  	\t-6		Use IPv6\n\
@@ -184,7 +187,7 @@ index 9ca84bd..0a5ba0a 100644
  	\t-D		Enable the debug socket option\n\
  	\t-d		Detach from stdin\n\
  	\t-F		Pass socket fd\n\
-@@ -2109,7 +2117,7 @@ void
+@@ -2124,7 +2132,7 @@ void
  usage(int ret)
  {
  	fprintf(stderr,
