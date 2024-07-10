@@ -3,7 +3,7 @@
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 include /usr/share/dpkg/buildflags.mk
 include /usr/share/dpkg/pkg-info.mk
-CFLAGS += -DDEBIAN_VERSION=\"$(DEB_VERSION)\" -fPIC
+CFLAGS += -DDEBIAN_VERSION=\"$(DEB_VERSION)\"
 
 include /usr/share/dpkg/architecture.mk
 ifeq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
@@ -39,7 +39,7 @@ ifeq ($(DEB_HOST_ARCH_OS),linux)
 endif
 
 execute_after_dh_install:
-	mv -T $(prefix)/bin/nc $(prefix)/bin/nc.openbsd
+	mv -T $(prefix)/usr/bin/nc $(prefix)/usr/bin/nc.openbsd
 
 execute_after_dh_installman:
 	mv -T $(man1dir)/nc.1 $(man1dir)/nc_openbsd.1

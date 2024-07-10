@@ -11,20 +11,20 @@ Bug-Debian: https://bugs.debian.org/961378
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/netcat.c b/netcat.c
-index be93415..6047f9d 100644
+index 9966393..b188911 100644
 --- a/netcat.c
 +++ b/netcat.c
-@@ -2208,9 +2208,11 @@ report_sock(const char *msg, const struct sockaddr *sa, socklen_t salen,
- 		case 0:
- 			break;
- 		case EAI_SYSTEM:
--			err(1, "getnameinfo");
-+			warn("getnameinfo");
-+			return;
- 		default:
--			errx(1, "getnameinfo: %s", gai_strerror(herr));
-+			warnx("getnameinfo: %s", gai_strerror(herr));
-+			return;
+@@ -2224,9 +2224,11 @@ report_sock(const char *msg, const struct sockaddr *sa, socklen_t salen,
+ 	case 0:
+ 		break;
+ 	case EAI_SYSTEM:
+-		err(1, "getnameinfo");
++		warn("getnameinfo");
++		return;
+ 	default:
+-		errx(1, "getnameinfo: %s", gai_strerror(herr));
++		warnx("getnameinfo: %s", gai_strerror(herr));
++		return;
  	}
  
  	fprintf(stderr, "%s on %s %s\n", msg, host, port);
