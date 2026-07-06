@@ -1,3 +1,10 @@
+netcat-openbsd (1.226-1.1deepin1) unstable; urgency=medium
+
+  * Add -fPIC to debian/checks/%.so build rule to fix FTBFS on non-PIE
+    toolchains (R_X86_64_32 relocation error).
+
+ -- jiabowen <jiabowen@uniontech.com>  Mon, 06 Jul 2026 16:22:06 +0800
+
 netcat-openbsd (1.226-1.1) unstable; urgency=medium
 
   * Non-maintainer upload.
