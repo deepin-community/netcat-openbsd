@@ -1,9 +1,22 @@
-netcat-openbsd (1.226-1.1deepin1) unstable; urgency=medium
+netcat-openbsd (1.229-1) unstable; urgency=medium
 
-  * Add -fPIC to debian/checks/%.so build rule to fix FTBFS on non-PIE
-    toolchains (R_X86_64_32 relocation error).
+  [ Guilhem Moulin ]
+  * New upstream release (from OpenBSD 7.7).
+  * Update Standards-Version to 4.7.2 (no changes necessary).
 
- -- jiabowen <jiabowen@uniontech.com>  Mon, 06 Jul 2026 16:22:06 +0800
+  [ mark.yang ]
+  * Fix build failure with GCC-15. (Closes: #1097448)
+
+ -- Guilhem Moulin <guilhem@debian.org>  Tue, 29 Apr 2025 05:38:29 +0200
+
+netcat-openbsd (1.228-1) unstable; urgency=medium
+
+  * New upstream release (from OpenBSD 7.6).
+  * d/control:
+    + Update standards version to 4.7.0, no changes needed.
+    + Replace obsolete Build-Depends: pkg-config with pkgconf.
+
+ -- Guilhem Moulin <guilhem@debian.org>  Sun, 05 Jan 2025 01:42:59 +0100
 
 netcat-openbsd (1.226-1.1) unstable; urgency=medium
 
