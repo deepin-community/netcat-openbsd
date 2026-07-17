@@ -1,4 +1,4 @@
-/* $OpenBSD: netcat.c,v 1.226 2023/08/14 08:07:27 tb Exp $ */
+/* $OpenBSD: netcat.c,v 1.229 2024/11/02 17:19:27 tb Exp $ */
 /*
  * Copyright (c) 2001 Eric Jackson <ericj@monkey.org>
  * Copyright (c) 2015 Bob Beck.  All rights reserved.
@@ -644,10 +644,6 @@ main(int argc, char *argv[])
 				close(connfd);
 				tls_free(tls_cctx);
 			}
-			if (family == AF_UNIX && uflag) {
-				if (connect(s, NULL, 0) == -1)
-					err(1, "connect");
-			}
 
 			if (!kflag)
 				break;
@@ -778,7 +774,7 @@ timeout_tls(int s, struct tls *tls_ctx, int (*func)(struct tls *))
 	struct pollfd pfd;
 	int ret;
 
-	while ((ret = (*func)(tls_ctx)) != 0) {
+	while ((ret = func(tls_ctx)) != 0) {
 		if (ret == TLS_WANT_POLLIN)
 			pfd.events = POLLIN;
 		else if (ret == TLS_WANT_POLLOUT)
@@ -1371,7 +1367,7 @@ fdpass(int nfd)
 	memset(&cmsgbuf, 0, sizeof(cmsgbuf));
 	memset(&iov, 0, sizeof(iov));
 
-	mh.msg_control = (caddr_t)&cmsgbuf.buf;
+	mh.msg_control = &cmsgbuf.buf;
 	mh.msg_controllen = sizeof(cmsgbuf.buf);
 	cmsg = CMSG_FIRSTHDR(&mh);
 	cmsg->cmsg_len = CMSG_LEN(sizeof(int));

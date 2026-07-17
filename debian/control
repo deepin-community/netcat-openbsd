@@ -2,12 +2,12 @@ Source: netcat-openbsd
 Section: net
 Priority: important
 Maintainer: Guilhem Moulin <guilhem@debian.org>
-Standards-Version: 4.6.2
+Standards-Version: 4.7.2
 Rules-Requires-Root: no
 Build-Depends: debhelper-compat (= 13),
                iproute2 [linux-any] <!nocheck>,
                libbsd-dev,
-               pkg-config,
+               pkgconf,
                procps [linux-any] <!nocheck>,
                strace [linux-any] <!nocheck>
 Vcs-Git: https://salsa.debian.org/debian/netcat-openbsd.git -b debian/latest

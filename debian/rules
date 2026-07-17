@@ -27,7 +27,7 @@ override_dh_auto_build:
 
 # used to spoof passphrass prompts via LD_PRELOAD while running the test suite
 debian/checks/%.so: debian/checks/%.c
-	$(CC) -shared -fPIC $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@ $<
+	$(CC) -shared $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@ $<
 
 debian/checks/sun_path-size: debian/checks/sun_path-size.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@ $<
